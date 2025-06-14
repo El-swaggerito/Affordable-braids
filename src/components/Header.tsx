@@ -26,8 +26,7 @@ const Header = () => {
           <nav className="hidden md:flex space-x-8">
             {[
               { path: '/', label: 'Home' },
-              { path: '/services', label: 'Services' },
-              { path: '/book', label: 'Book Appointment' }
+              { path: '/services', label: 'Services' }
             ].map(({ path, label }) => (
               <Link
                 key={path}
@@ -58,8 +57,7 @@ const Header = () => {
             <nav className="flex flex-col space-y-2">
               {[
                 { path: '/', label: 'Home' },
-                { path: '/services', label: 'Services' },
-                { path: '/book', label: 'Book Appointment' }
+                { path: '/services', label: 'Services' }
               ].map(({ path, label }) => (
                 <Link
                   key={path}
