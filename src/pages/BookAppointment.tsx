@@ -96,7 +96,7 @@ const BookAppointment = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('https://formspree.io/f/xdkzgwgn', {
+      const response = await fetch('https://formspree.io/f/xjkrrggg', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
