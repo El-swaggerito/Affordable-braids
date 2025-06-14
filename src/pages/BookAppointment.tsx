@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Calendar, Clock, User, Mail, Phone, MessageSquare, Scissors, AlertCircle, DollarSign, Shield, RefreshCw } from 'lucide-react';
 
 const BookAppointment = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const selectedService = location.state?.selectedService || '';
   
   const [formData, setFormData] = useState({
@@ -109,8 +110,8 @@ const BookAppointment = () => {
       });
 
       if (response.ok) {
-        // Redirect to thank you page
-        window.location.href = '/thank-you';
+        // Use React Router navigation instead of window.location.href
+        navigate('/thank-you');
       } else {
         throw new Error('Failed to submit form');
       }
