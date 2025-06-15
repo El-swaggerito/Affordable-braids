@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Calendar, Clock, User, Mail, Phone, MessageSquare, Scissors, AlertCircle, DollarSign, Shield, RefreshCw } from 'lucide-react';
+import { Calendar, Clock, User, Mail, Phone, MessageSquare, Scissors, AlertCircle, DollarSign, Shield, RefreshCw, Upload, CreditCard } from 'lucide-react';
 
 const BookAppointment = () => {
   const location = useLocation();
@@ -19,6 +19,8 @@ const BookAppointment = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [agreedToPolicies, setAgreedToPolicies] = useState(false);
+  const [depositScreenshot, setDepositScreenshot] = useState<File | null>(null);
+  const [depositPreview, setDepositPreview] = useState<string | null>(null);
 
   const services = [
     'Large Knotless - $155',
@@ -85,6 +87,32 @@ const BookAppointment = () => {
     });
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please upload an image file (PNG, JPG, etc.)');
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size must be less than 5MB');
+        return;
+      }
+
+      setDepositScreenshot(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setDepositPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -93,24 +121,34 @@ const BookAppointment = () => {
       return;
     }
 
+    if (!depositScreenshot) {
+      alert('Please upload a screenshot of your $15 Interac e-Transfer deposit before booking.');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('https://formspree.io/f/xjkrrggg', {
+      // Create FormData to handle file upload
+      const formDataToSend = new FormData();
+      
+      // Add all form fields
+      Object.entries(formData).forEach(([key, value]) => {
+        formDataToSend.append(key, value);
+      });
+      
+      // Add additional fields
+      formDataToSend.append('_subject', `New Braiding Appointment Request from ${formData.fullName}`);
+      formDataToSend.append('_replyto', formData.email);
+      formDataToSend.append('agreedToPolicies', 'true');
+      formDataToSend.append('depositScreenshot', depositScreenshot);
+
+      const response = await fetch('https://formspree.io/f/xdkzgwgn', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          _subject: `New Braiding Appointment Request from ${formData.fullName}`,
-          _replyto: formData.email,
-          agreedToPolicies: true
-        }),
+        body: formDataToSend,
       });
 
       if (response.ok) {
-        // Use React Router navigation instead of window.location.href
         navigate('/thank-you');
       } else {
         throw new Error('Failed to submit form');
@@ -137,6 +175,54 @@ const BookAppointment = () => {
           </p>
         </div>
 
+        {/* Interac e-Transfer Payment Instructions */}
+        <div className="mb-12 animate-slide-up">
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-200">
+            <div className="flex items-center mb-6">
+              <div className="bg-blue-500/20 p-3 rounded-full mr-4">
+                <CreditCard className="h-6 w-6 text-blue-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800">Payment Instructions - $15 Deposit Required</h2>
+            </div>
+
+            <div className="bg-white rounded-xl p-6 shadow-md">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <DollarSign className="h-5 w-5 text-green-600 mr-2" />
+                How to Send Your $15 Deposit via Interac e-Transfer
+              </h3>
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold text-gray-700 mb-3">Step 1: Send Interac e-Transfer</h4>
+                  <ul className="text-gray-600 space-y-2 text-sm">
+                    <li>• <strong>Amount:</strong> $15.00 CAD</li>
+                    <li>• <strong>Email:</strong> Adedejitiwalade8@gmail.com</li>
+                    <li>• <strong>Message:</strong> Include your full name and preferred appointment date</li>
+                    <li>• <strong>Security Question:</strong> Use any question you prefer</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold text-gray-700 mb-3">Step 2: Upload Screenshot</h4>
+                  <ul className="text-gray-600 space-y-2 text-sm">
+                    <li>• Take a screenshot of your successful e-Transfer</li>
+                    <li>• Make sure the amount ($15) and email are visible</li>
+                    <li>• Upload the screenshot in the form below</li>
+                    <li>• This confirms your deposit and secures your appointment</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                <p className="text-sm text-gray-700">
+                  <strong>Important:</strong> Your appointment request cannot be processed without the deposit screenshot. 
+                  This $15 deposit is non-refundable and non-transferable, and will be deducted from your total service cost.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Scheduling Policies Section */}
         <div className="mb-12 animate-slide-up">
           <div className="bg-gradient-to-r from-salon-pink/10 to-pink-100/50 rounded-2xl p-8 border border-salon-pink/20">
@@ -144,7 +230,7 @@ const BookAppointment = () => {
               <div className="bg-salon-pink/20 p-3 rounded-full mr-4">
                 <AlertCircle className="h-6 w-6 text-salon-pink" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-800">Scheduling Instructions - Please Read Before Booking</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Scheduling Policies - Please Read Before Booking</h2>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
@@ -229,6 +315,17 @@ const BookAppointment = () => {
                   <div>
                     <p className="font-semibold text-gray-800">Email Us</p>
                     <p className="text-gray-600">Adedejitiwalade8@gmail.com</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-4">
+                  <div className="bg-blue-500/20 p-3 rounded-full">
+                    <CreditCard className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800">Interac e-Transfer</p>
+                    <p className="text-gray-600">Adedejitiwalade8@gmail.com</p>
+                    <p className="text-xs text-gray-500 mt-1">For $15 deposit payments</p>
                   </div>
                 </div>
                 
@@ -394,6 +491,58 @@ const BookAppointment = () => {
                   </div>
                 </div>
 
+                {/* Deposit Screenshot Upload */}
+                <div>
+                  <label htmlFor="depositScreenshot" className="block text-sm font-semibold text-gray-700 mb-2">
+                    <Upload className="inline h-4 w-4 mr-1" />
+                    Upload Deposit Screenshot *
+                  </label>
+                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-salon-pink transition-colors duration-200">
+                    <input
+                      type="file"
+                      id="depositScreenshot"
+                      accept="image/*"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      required
+                    />
+                    <label htmlFor="depositScreenshot" className="cursor-pointer">
+                      {depositPreview ? (
+                        <div className="space-y-4">
+                          <img
+                            src={depositPreview}
+                            alt="Deposit screenshot preview"
+                            className="max-w-full max-h-48 mx-auto rounded-lg shadow-md"
+                          />
+                          <p className="text-sm text-green-600 font-medium">
+                            ✓ Screenshot uploaded successfully
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            Click to change screenshot
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <div className="bg-gray-100 p-4 rounded-full w-16 h-16 mx-auto flex items-center justify-center">
+                            <Upload className="h-8 w-8 text-gray-400" />
+                          </div>
+                          <div>
+                            <p className="text-gray-600 font-medium">
+                              Upload your $15 Interac e-Transfer screenshot
+                            </p>
+                            <p className="text-sm text-gray-500 mt-1">
+                              PNG, JPG, or other image formats (max 5MB)
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </label>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">
+                    Make sure the screenshot shows the $15 amount and recipient email (Adedejitiwalade8@gmail.com)
+                  </p>
+                </div>
+
                 <div>
                   <label htmlFor="notes" className="block text-sm font-semibold text-gray-700 mb-2">
                     <MessageSquare className="inline h-4 w-4 mr-1" />
@@ -421,14 +570,14 @@ const BookAppointment = () => {
                       required
                     />
                     <span className="text-sm text-gray-700">
-                      I have read and agree to the <strong>scheduling policies</strong> above, including the deposit, cancellation, and rescheduling terms. I understand that a $15 non-refundable deposit is required to secure my appointment.
+                      I have read and agree to the <strong>scheduling policies</strong> above, including the deposit, cancellation, and rescheduling terms. I understand that a $15 non-refundable deposit via Interac e-Transfer is required to secure my appointment.
                     </span>
                   </label>
                 </div>
 
                 <button
                   type="submit"
-                  disabled={isSubmitting || !agreedToPolicies}
+                  disabled={isSubmitting || !agreedToPolicies || !depositScreenshot}
                   className="w-full bg-gradient-to-r from-salon-pink to-pink-400 text-white py-4 px-6 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
                   {isSubmitting ? (
@@ -440,6 +589,19 @@ const BookAppointment = () => {
                     'Book My Braiding Appointment'
                   )}
                 </button>
+
+                {(!agreedToPolicies || !depositScreenshot) && (
+                  <div className="text-center">
+                    <p className="text-sm text-gray-500">
+                      {!depositScreenshot && !agreedToPolicies 
+                        ? 'Please upload your deposit screenshot and agree to the policies to continue'
+                        : !depositScreenshot 
+                        ? 'Please upload your deposit screenshot to continue'
+                        : 'Please agree to the scheduling policies to continue'
+                      }
+                    </p>
+                  </div>
+                )}
               </form>
             </div>
           </div>
