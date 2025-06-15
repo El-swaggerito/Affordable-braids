@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Calendar, Clock, User, Mail, Phone, MessageSquare, Scissors, AlertCircle, DollarSign, Shield, RefreshCw, Upload, CreditCard } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
 const BookAppointment = () => {
   const location = useLocation();
@@ -87,7 +88,86 @@ const BookAppointment = () => {
     });
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Function to upload image to imgbb hosting service
+  const uploadImageToHost = async (file: File): Promise<string> => {
+    try {
+      // Using imgbb.com as a free image hosting service
+      const formData = new FormData();
+      formData.append('image', file);
+      
+      // Your actual imgbb API key
+      const apiKey = 'c59e6d8a174a59afce29e4cdbbf0f0ce';
+      
+      const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to upload image');
+      }
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        return data.data.url;
+      } else {
+        throw new Error('Image upload failed');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      // Fallback: convert to base64 but with heavy compression
+      return await compressImageToBase64(file, 20); // Very small size for fallback
+    }
+  };
+
+  // Fallback compression function
+  const compressImageToBase64 = (file: File, maxSizeKB: number = 20): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = () => {
+        // Calculate new dimensions while maintaining aspect ratio
+        let { width, height } = img;
+        const maxDimension = 400; // Smaller for fallback
+        
+        if (width > height && width > maxDimension) {
+          height = (height * maxDimension) / width;
+          width = maxDimension;
+        } else if (height > maxDimension) {
+          width = (width * maxDimension) / height;
+          height = maxDimension;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        // Draw and compress image
+        ctx?.drawImage(img, 0, 0, width, height);
+        
+        // Function to try different quality levels
+        const tryCompress = (quality: number): void => {
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+          const sizeInKB = (compressedDataUrl.length * 3) / 4 / 1024;
+          
+          if (sizeInKB <= maxSizeKB || quality <= 0.1) {
+            resolve(compressedDataUrl);
+          } else {
+            tryCompress(quality - 0.1);
+          }
+        };
+        
+        tryCompress(0.6);
+      };
+      
+      img.onerror = () => reject(new Error('Failed to load image'));
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       // Validate file type
@@ -96,9 +176,9 @@ const BookAppointment = () => {
         return;
       }
       
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        alert('File size must be less than 5MB');
+      // Validate file size (max 10MB for initial upload)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('File size must be less than 10MB');
         return;
       }
 
@@ -116,6 +196,8 @@ const BookAppointment = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    console.log('Form submission started');
+    
     if (!agreedToPolicies) {
       alert('Please agree to the scheduling policies before booking your appointment.');
       return;
@@ -129,33 +211,108 @@ const BookAppointment = () => {
     setIsSubmitting(true);
 
     try {
-      // Create FormData to handle file upload
-      const formDataToSend = new FormData();
+      console.log('Uploading image to hosting service...');
       
-      // Add all form fields
-      Object.entries(formData).forEach(([key, value]) => {
-        formDataToSend.append(key, value);
-      });
+      // Upload image and get URL
+      const imageUrl = await uploadImageToHost(depositScreenshot);
+      console.log('Image uploaded successfully, URL:', imageUrl);
       
-      // Add additional fields
-      formDataToSend.append('_subject', `New Braiding Appointment Request from ${formData.fullName}`);
-      formDataToSend.append('_replyto', formData.email);
-      formDataToSend.append('agreedToPolicies', 'true');
-      formDataToSend.append('depositScreenshot', depositScreenshot);
+      // Updated EmailJS configuration with proper error handling
+      const emailjsConfig = {
+        serviceId: 'service_97luys4',
+        templateId: 'template_o2gk8oa', 
+        publicKey: '4fDtVpq9MOCHBtLst'
+      };
+      
+      // Initialize EmailJS with proper configuration
+      try {
+        emailjs.init({
+          publicKey: emailjsConfig.publicKey,
+          blockHeadless: true,
+          limitRate: {
+            id: 'app',
+            throttle: 10000,
+          },
+        });
+      } catch (initError) {
+        console.error('EmailJS initialization error:', initError);
+        throw new Error('Email service initialization failed');
+      }
+      
+      // Prepare template parameters for EmailJS
+      const templateParams = {
+        from_name: formData.fullName,
+        from_email: formData.email,
+        phone: formData.phone,
+        service: formData.service,
+        date: formData.date,
+        time: formData.time,
+        notes: formData.notes || 'No additional notes provided',
+        deposit_screenshot_url: imageUrl,
+        agreed_policies: 'Yes - Customer agreed to all scheduling policies',
+        to_email: 'Adedejitiwalade8@gmail.com',
+        // Additional fields for better email formatting
+        appointment_summary: `New appointment request from ${formData.fullName} for ${formData.service} on ${formData.date} at ${formData.time}`,
+        customer_details: `Name: ${formData.fullName}\nEmail: ${formData.email}\nPhone: ${formData.phone}`,
+        service_details: `Service: ${formData.service}\nDate: ${formData.date}\nTime: ${formData.time}`,
+        deposit_status: 'Deposit screenshot uploaded and available via link'
+      };
 
-      const response = await fetch('https://formspree.io/f/xdkzgwgn', {
-        method: 'POST',
-        body: formDataToSend,
-      });
+      console.log('Sending email with EmailJS...');
+      
+      // Send email using EmailJS with improved error handling and timeout
+      const response = await Promise.race([
+        emailjs.send(
+          emailjsConfig.serviceId,
+          emailjsConfig.templateId,
+          templateParams,
+          {
+            publicKey: emailjsConfig.publicKey,
+          }
+        ),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
+        )
+      ]) as any;
 
-      if (response.ok) {
+      console.log('EmailJS response:', response);
+
+      if (response && (response.status === 200 || response.text === 'OK')) {
+        console.log('Email sent successfully');
         navigate('/thank-you');
       } else {
-        throw new Error('Failed to submit form');
+        throw new Error(`EmailJS returned unexpected response: ${JSON.stringify(response)}`);
       }
+
     } catch (error) {
-      console.error('Error:', error);
-      alert('There was an error submitting your appointment request. Please try again or call us directly.');
+      console.error('Error in form submission:', error);
+      
+      // Provide more specific error messages and fallback options
+      let errorMessage = 'There was an error submitting your appointment request.\n\n';
+      
+      if (error instanceof Error) {
+        if (error.message.includes('Failed to fetch') || error.message.includes('Network')) {
+          errorMessage += 'Network Error: Please check your internet connection and try again.\n\n';
+        } else if (error.message.includes('timeout')) {
+          errorMessage += 'Request Timeout: The request took too long. Please try again.\n\n';
+        } else if (error.message.includes('401') || error.message.includes('403')) {
+          errorMessage += 'Authentication Error: There was an issue with our email service configuration.\n\n';
+        } else if (error.message.includes('initialization')) {
+          errorMessage += 'Service Error: Email service could not be initialized properly.\n\n';
+        } else {
+          errorMessage += `Technical Error: ${error.message}\n\n`;
+        }
+      } else {
+        errorMessage += 'Unknown Error: An unexpected error occurred.\n\n';
+      }
+      
+      errorMessage += 'ALTERNATIVE BOOKING OPTIONS:\n';
+      errorMessage += '• Call us directly: +1 (437) 983-6451\n';
+      errorMessage += '• Email us: Adedejitiwalade8@gmail.com\n';
+      errorMessage += '• Include your deposit screenshot and all appointment details\n\n';
+      errorMessage += 'We apologize for the inconvenience and will respond within 24 hours.';
+      
+      alert(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -531,7 +688,7 @@ const BookAppointment = () => {
                               Upload your $15 Interac e-Transfer screenshot
                             </p>
                             <p className="text-sm text-gray-500 mt-1">
-                              PNG, JPG, or other image formats (max 5MB)
+                              PNG, JPG, or other image formats (max 10MB)
                             </p>
                           </div>
                         </div>
@@ -539,7 +696,8 @@ const BookAppointment = () => {
                     </label>
                   </div>
                   <p className="text-xs text-gray-500 mt-2">
-                    Make sure the screenshot shows the $15 amount and recipient email (Adedejitiwalade8@gmail.com)
+                    Make sure the screenshot shows the $15 amount and recipient email (Adedejitiwalade8@gmail.com). 
+                    Your image will be securely uploaded and a link will be sent in the email.
                   </p>
                 </div>
 
@@ -583,7 +741,7 @@ const BookAppointment = () => {
                   {isSubmitting ? (
                     <span className="flex items-center justify-center">
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                      Booking Your Appointment...
+                      Uploading & Booking Your Appointment...
                     </span>
                   ) : (
                     'Book My Braiding Appointment'
