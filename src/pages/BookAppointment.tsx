@@ -36,8 +36,8 @@ const BookAppointment = () => {
     'Diva Braids - $175',
     'Stitches Braid - $140',
     'Short Butterfly Locs - $120',
-    'Boho Switches Braid (Short) - $165',
-    'Boho Switches Braid (Long) - $185',
+    'Boho Stitches Braid (Short) - $165',
+    'Boho Stitches Braid (Long) - $185',
     'Medium Butt Knotless Braid - $190',
     'Twist - $145',
     'Butterfly Locs - $170',
@@ -96,7 +96,7 @@ const BookAppointment = () => {
       formData.append('image', file);
       
       // Your actual imgbb API key
-      const apiKey = 'c59e6d8a174a59afce29e4cdbbf0f0ce';
+      const apiKey = import.meta.env.VITE_IMGBB_API_KEY;
       
       const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
         method: 'POST',

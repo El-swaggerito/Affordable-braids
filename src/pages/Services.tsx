@@ -102,16 +102,16 @@ const Services = () => {
     },
     {
       id: 13,
-      name: "BOHO SWITCHES BRAID (Short)",
-      description: "Short bohemian-inspired switch braids with loose, flowing texture for a free-spirited look.",
+      name: "BOHO STITCHES BRAID (Short)",
+      description: "Short bohemian-inspired stitch braids with loose, flowing texture for a free-spirited look.",
       price: "$165",
       duration: "4 hr. 45 mins",
       image: "/Boho switches braid.jpg"
     },
     {
       id: 14,
-      name: "BOHO SWITCHES BRAID (Long)",
-      description: "Long bohemian-inspired switch braids with loose, flowing texture for a dramatic free-spirited look.",
+      name: "BOHO STITCHES BRAID (Long)",
+      description: "Long bohemian-inspired stitch braids with loose, flowing texture for a dramatic free-spirited look.",
       price: "$185",
       duration: "6 hr. 15 mins",
       image: "/Boho switches braid.jpg"
@@ -191,30 +191,31 @@ const Services = () => {
   ];
 
   return (
-    <div className="py-20 animate-fade-in bg-gray-50 min-h-screen">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="py-12 sm:py-16 lg:py-20 animate-fade-in bg-gray-50 min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12 animate-slide-up">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+        <div className="text-center mb-8 sm:mb-12 animate-slide-up">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 mb-4 sm:mb-6">
             Our <span className="bg-gradient-to-r from-salon-pink to-pink-500 bg-clip-text text-transparent">Braiding Services</span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
             Discover our comprehensive range of professional braiding services, each designed to protect your natural hair 
             while keeping you looking absolutely stunning.
           </p>
         </div>
 
-        {/* Services List */}
-        <div className="space-y-6">
+        {/* Services Grid - Mobile First Responsive Design */}
+        <div className="space-y-4 sm:space-y-6">
           {services.map((service, index) => (
             <div
               key={service.id}
               className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden animate-slide-up border border-gray-100"
               style={{ animationDelay: `${index * 0.05}s` }}
             >
-              <div className="flex">
+              {/* Mobile Layout (Stack Vertically) */}
+              <div className="block sm:hidden">
                 {/* Image */}
-                <div className="w-32 h-32 flex-shrink-0">
+                <div className="w-full h-48">
                   <img
                     src={service.image}
                     alt={service.name}
@@ -223,34 +224,120 @@ const Services = () => {
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 p-6 flex justify-between items-center">
-                  <div className="flex-1">
-                    {/* Service Title */}
-                    <h3 className="text-lg font-bold text-gray-800 mb-2 uppercase tracking-wide">
-                      {service.name}
-                    </h3>
+                <div className="p-4">
+                  {/* Service Title */}
+                  <h3 className="text-lg font-bold text-gray-800 mb-2 uppercase tracking-wide">
+                    {service.name}
+                  </h3>
 
-                    {/* Duration */}
-                    <div className="flex items-center text-gray-600 mb-1">
+                  {/* Duration and Price Row */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center text-gray-600">
                       <Clock className="h-4 w-4 mr-2 text-gray-500" />
                       <span className="text-sm">{service.duration}</span>
                     </div>
-
-                    {/* Price */}
-                    <div className="text-2xl font-bold text-salon-pink mb-2">
+                    <div className="text-xl font-bold text-salon-pink">
                       {service.price}
                     </div>
                   </div>
 
                   {/* Select Button */}
-                  <div className="ml-6">
+                  <Link
+                    to="/book"
+                    state={{ selectedService: `${service.name} - ${service.price}` }}
+                    className="w-full bg-gradient-to-r from-salon-pink to-pink-400 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-center block"
+                  >
+                    Select Service
+                  </Link>
+                </div>
+              </div>
+
+              {/* Tablet Layout (Side by Side) */}
+              <div className="hidden sm:block lg:hidden">
+                <div className="flex">
+                  {/* Image */}
+                  <div className="w-40 h-40 flex-shrink-0">
+                    <img
+                      src={service.image}
+                      alt={service.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 p-6 flex flex-col justify-between">
+                    <div>
+                      {/* Service Title */}
+                      <h3 className="text-lg font-bold text-gray-800 mb-2 uppercase tracking-wide">
+                        {service.name}
+                      </h3>
+
+                      {/* Duration */}
+                      <div className="flex items-center text-gray-600 mb-2">
+                        <Clock className="h-4 w-4 mr-2 text-gray-500" />
+                        <span className="text-sm">{service.duration}</span>
+                      </div>
+
+                      {/* Price */}
+                      <div className="text-xl font-bold text-salon-pink mb-3">
+                        {service.price}
+                      </div>
+                    </div>
+
+                    {/* Select Button */}
                     <Link
                       to="/book"
                       state={{ selectedService: `${service.name} - ${service.price}` }}
-                      className="bg-gradient-to-r from-salon-pink to-pink-400 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-sm"
+                      className="bg-gradient-to-r from-salon-pink to-pink-400 text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-sm text-center inline-block"
                     >
                       Select
                     </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Desktop Layout (Original) */}
+              <div className="hidden lg:block">
+                <div className="flex">
+                  {/* Image */}
+                  <div className="w-32 h-32 flex-shrink-0">
+                    <img
+                      src={service.image}
+                      alt={service.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 p-6 flex justify-between items-center">
+                    <div className="flex-1">
+                      {/* Service Title */}
+                      <h3 className="text-lg font-bold text-gray-800 mb-2 uppercase tracking-wide">
+                        {service.name}
+                      </h3>
+
+                      {/* Duration */}
+                      <div className="flex items-center text-gray-600 mb-1">
+                        <Clock className="h-4 w-4 mr-2 text-gray-500" />
+                        <span className="text-sm">{service.duration}</span>
+                      </div>
+
+                      {/* Price */}
+                      <div className="text-2xl font-bold text-salon-pink mb-2">
+                        {service.price}
+                      </div>
+                    </div>
+
+                    {/* Select Button */}
+                    <div className="ml-6">
+                      <Link
+                        to="/book"
+                        state={{ selectedService: `${service.name} - ${service.price}` }}
+                        className="bg-gradient-to-r from-salon-pink to-pink-400 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-sm"
+                      >
+                        Select
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -259,17 +346,17 @@ const Services = () => {
         </div>
 
         {/* Call to Action */}
-        <div className="mt-16 bg-gradient-to-r from-salon-pink/20 to-pink-200/30 rounded-2xl p-8 md:p-12 text-center animate-slide-up">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">
+        <div className="mt-12 sm:mt-16 bg-gradient-to-r from-salon-pink/20 to-pink-200/30 rounded-2xl p-6 sm:p-8 lg:p-12 text-center animate-slide-up">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">
             Ready for Your New Protective Style?
           </h2>
-          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
             Book your appointment today and let us create the perfect braided look for you. 
             All services include a complimentary consultation and aftercare instructions.
           </p>
           <Link
             to="/book"
-            className="inline-block bg-gradient-to-r from-salon-pink to-pink-400 text-white px-8 py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+            className="inline-block bg-gradient-to-r from-salon-pink to-pink-400 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm sm:text-base"
           >
             Book Your Appointment Now
           </Link>
