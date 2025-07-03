@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Clock } from 'lucide-react';
+import { Clock, Eye, X, ZoomIn } from 'lucide-react';
 
 const Services = () => {
+  const [previewImage, setPreviewImage] = useState<{ src: string; name: string } | null>(null);
+
   const services = [
     {
       id: 1,
@@ -58,7 +60,7 @@ const Services = () => {
       description: "Delicate small knotless braids that offer versatility and a refined protective style for any occasion.",
       price: "$180",
       duration: "6 hr. 30 mins",
-      image: "/Small Knotless 180.jpg"
+      image: "/Small Knotless.jpg"
     },
     {
       id: 8,
@@ -86,14 +88,31 @@ const Services = () => {
     },
     {
       id: 11,
-      name: "STITCH BRAIDS (4 Stitch Braid)",
+      name: "CONROW STITCHES BRAIDS (Short)",
       description: "Intricate stitched braiding pattern that creates a unique textured look with artistic flair and precision.",
-      price: "$140",
+      price: "$80",
       duration: "4 hr",
-      image: "/Stitches braid 140.jpg"
+      image: "/Fulani.jpg"
     },
-    {
+        {
       id: 12,
+      name: "CONROW STITCHES BRAIDS (Medium)",
+      description: "Intricate stitched braiding pattern that creates a unique textured look with artistic flair and precision.",
+      price: "$90",
+      duration: "4 hr",
+      image: "/Fulani.jpg"
+    },
+        {
+      id: 13,
+      name: "CONROW STITCHES BRAIDS (Long)",
+      description: "Intricate stitched braiding pattern that creates a unique textured look with artistic flair and precision.",
+      price: "$120",
+      duration: "4 hr",
+      image: "/Fulani.jpg"
+    },
+    
+    {
+      id: 14,
       name: "SHORT BUTTERFLY LOCS",
       description: "Trendy short butterfly locs with a natural, carefree texture perfect for a chic, effortless style.",
       price: "$120",
@@ -101,15 +120,15 @@ const Services = () => {
       image: "/Short butter fly locs 120.jpg"
     },
     {
-      id: 13,
+      id: 15,
       name: "BOHO STITCHES BRAID (Short)",
       description: "Short bohemian-inspired stitch braids with loose, flowing texture for a free-spirited look.",
       price: "$165",
       duration: "4 hr. 45 mins",
-      image: "/Boho switches braid.jpg"
+      image: "/Short Boho Stitches Braid.png"
     },
     {
-      id: 14,
+      id: 16,
       name: "BOHO STITCHES BRAID (Long)",
       description: "Long bohemian-inspired stitch braids with loose, flowing texture for a dramatic free-spirited look.",
       price: "$185",
@@ -117,7 +136,7 @@ const Services = () => {
       image: "/Boho switches braid.jpg"
     },
     {
-      id: 15,
+      id: 17,
       name: "MEDIUM BUTT KNOTLESS BRAID",
       description: "Medium-sized knotless braids extending to hip length for a dramatic, stunning appearance.",
       price: "$190",
@@ -125,7 +144,7 @@ const Services = () => {
       image: "/Medium butt Knotless braid 190.jpg"
     },
     {
-      id: 16,
+      id: 18,
       name: "TWIST",
       description: "Classic protective twists that offer versatility and low maintenance while keeping hair healthy.",
       price: "$145",
@@ -133,7 +152,7 @@ const Services = () => {
       image: "/Twist 145.jpg"
     },
     {
-      id: 17,
+      id: 19,
       name: "BUTTERFLY LOCS",
       description: "Beautiful butterfly locs with natural texture and movement for a trendy, bohemian-inspired look.",
       price: "$170",
@@ -141,7 +160,7 @@ const Services = () => {
       image: "/Butterfly locs 170.jpg"
     },
     {
-      id: 18,
+      id: 20,
       name: "SHORT BOHO BRAID",
       description: "Short bohemian braids with textured ends for a carefree, stylish appearance that's easy to maintain.",
       price: "$145",
@@ -149,7 +168,7 @@ const Services = () => {
       image: "/Short boho braid 145.jpg"
     },
     {
-      id: 19,
+      id: 21,
       name: "FRENCH CURL",
       description: "Elegant French curl braids with bouncy, voluminous curls for a sophisticated and glamorous look.",
       price: "$175",
@@ -157,7 +176,7 @@ const Services = () => {
       image: "/French curl 175.jpg"
     },
     {
-      id: 20,
+      id: 22,
       name: "WAIST LENGTH MEDIUM BOHO BRAIDS",
       description: "Medium-sized boho braids extending to waist length with beautiful textured ends.",
       price: "$185",
@@ -165,7 +184,7 @@ const Services = () => {
       image: "/Waist length medium boho braids 185.jpg"
     },
     {
-      id: 21,
+      id: 23,
       name: "MEDIUM MID BACK BOHO BRAID",
       description: "Medium boho braids reaching mid-back length with natural texture and bohemian flair.",
       price: "$165",
@@ -173,7 +192,7 @@ const Services = () => {
       image: "/Medium mid back boho braid 165.jpg"
     },
     {
-      id: 22,
+      id: 24,
       name: "FAUX LOCS",
       description: "Authentic-looking faux locs that give you the dreadlock aesthetic without the long-term commitment.",
       price: "$150",
@@ -181,14 +200,41 @@ const Services = () => {
       image: "/Faux locs 150.jpg"
     },
     {
-      id: 23,
+      id: 25,
       name: "BUTT LENGTH LOCS",
       description: "Ultra-long locs extending to butt length for a dramatic, statement-making protective style.",
       price: "$185",
       duration: "7 hr. 30 mins",
       image: "/length locs.jpg"
+    },
+        {
+      id: 26,
+      name: "FULANI BRAIDS",
+      description: "Fulani braids are a traditional West African hairstyle featuring cornrows at the front and box braids at the back, often adorned with beads or cowrie shells.",
+      price: "$140",
+      duration: "4 hr",
+      image: "/Fulani Braid.jpg"
     }
   ];
+
+  const openPreview = (imageSrc: string, serviceName: string) => {
+    setPreviewImage({ src: imageSrc, name: serviceName });
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closePreview = () => {
+    setPreviewImage(null);
+    // Restore body scroll
+    document.body.style.overflow = 'unset';
+  };
+
+  // Close modal when clicking outside the image
+  const handleModalClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      closePreview();
+    }
+  };
 
   return (
     <div className="py-12 sm:py-16 lg:py-20 animate-fade-in bg-gray-50 min-h-screen">
@@ -212,74 +258,125 @@ const Services = () => {
               className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden animate-slide-up border border-gray-100"
               style={{ animationDelay: `${index * 0.05}s` }}
             >
-              {/* Mobile Layout (Stack Vertically) */}
+              {/* Mobile Layout (Stack Vertically) - With Preview Button */}
               <div className="block sm:hidden">
-                {/* Image */}
-                <div className="w-full h-48">
+                {/* Large Image for Mobile with Preview Button */}
+                <div className="w-full h-80 relative overflow-hidden group">
                   <img
                     src={service.image}
                     alt={service.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   />
+                  
+                  {/* Preview Button Overlay */}
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <button
+                      onClick={() => openPreview(service.image, service.name)}
+                      className="bg-white/90 backdrop-blur-sm text-gray-800 px-4 py-2 rounded-full font-semibold flex items-center space-x-2 shadow-lg hover:bg-white hover:scale-105 transition-all duration-200"
+                    >
+                      <Eye className="h-4 w-4" />
+                      <span>Preview</span>
+                    </button>
+                  </div>
+
+                  {/* Always visible preview button in corner */}
+                  <button
+                    onClick={() => openPreview(service.image, service.name)}
+                    className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-gray-800 p-2 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200 sm:hidden"
+                  >
+                    <ZoomIn className="h-4 w-4" />
+                  </button>
+
+                  {/* Gradient overlay for better text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
                 </div>
 
                 {/* Content */}
-                <div className="p-4">
+                <div className="p-5">
                   {/* Service Title */}
-                  <h3 className="text-lg font-bold text-gray-800 mb-2 uppercase tracking-wide">
+                  <h3 className="text-xl font-bold text-gray-800 mb-3 uppercase tracking-wide leading-tight">
                     {service.name}
                   </h3>
 
+                  {/* Description */}
+                  <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+                    {service.description}
+                  </p>
+
                   {/* Duration and Price Row */}
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center text-gray-600">
                       <Clock className="h-4 w-4 mr-2 text-gray-500" />
-                      <span className="text-sm">{service.duration}</span>
+                      <span className="text-sm font-medium">{service.duration}</span>
                     </div>
-                    <div className="text-xl font-bold text-salon-pink">
+                    <div className="text-2xl font-bold text-salon-pink">
                       {service.price}
                     </div>
                   </div>
 
-                  {/* Select Button */}
-                  <Link
-                    to="/book"
-                    state={{ selectedService: `${service.name} - ${service.price}` }}
-                    className="w-full bg-gradient-to-r from-salon-pink to-pink-400 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-center block"
-                  >
-                    Select Service
-                  </Link>
+                  {/* Action Buttons */}
+                  <div className="space-y-3">
+                    {/* Preview Button for Mobile */}
+                    <button
+                      onClick={() => openPreview(service.image, service.name)}
+                      className="w-full bg-gray-100 text-gray-700 px-6 py-3 rounded-full font-semibold hover:bg-gray-200 transition-all duration-200 text-center flex items-center justify-center space-x-2"
+                    >
+                      <Eye className="h-4 w-4" />
+                      <span>Preview Hairstyle</span>
+                    </button>
+
+                    {/* Select Button */}
+                    <Link
+                      to="/book"
+                      state={{ selectedService: `${service.name} - ${service.price}` }}
+                      className="w-full bg-gradient-to-r from-salon-pink to-pink-400 text-white px-6 py-4 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-center block text-lg"
+                    >
+                      Select Service
+                    </Link>
+                  </div>
                 </div>
               </div>
 
-              {/* Tablet Layout (Side by Side) */}
+              {/* Tablet Layout (Side by Side) - Enhanced */}
               <div className="hidden sm:block lg:hidden">
                 <div className="flex">
-                  {/* Image */}
-                  <div className="w-40 h-40 flex-shrink-0">
+                  {/* Larger Image for Tablet */}
+                  <div className="w-48 h-48 flex-shrink-0 relative overflow-hidden group">
                     <img
                       src={service.image}
                       alt={service.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     />
+                    {/* Preview Button for Tablet */}
+                    <button
+                      onClick={() => openPreview(service.image, service.name)}
+                      className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm text-gray-800 p-2 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200"
+                    >
+                      <ZoomIn className="h-4 w-4" />
+                    </button>
                   </div>
 
                   {/* Content */}
                   <div className="flex-1 p-6 flex flex-col justify-between">
                     <div>
                       {/* Service Title */}
-                      <h3 className="text-lg font-bold text-gray-800 mb-2 uppercase tracking-wide">
+                      <h3 className="text-xl font-bold text-gray-800 mb-3 uppercase tracking-wide">
                         {service.name}
                       </h3>
+
+                      {/* Description */}
+                      <p className="text-gray-600 text-sm mb-3 leading-relaxed">
+                        {service.description}
+                      </p>
 
                       {/* Duration */}
                       <div className="flex items-center text-gray-600 mb-2">
                         <Clock className="h-4 w-4 mr-2 text-gray-500" />
-                        <span className="text-sm">{service.duration}</span>
+                        <span className="text-sm font-medium">{service.duration}</span>
                       </div>
 
                       {/* Price */}
-                      <div className="text-xl font-bold text-salon-pink mb-3">
+                      <div className="text-2xl font-bold text-salon-pink mb-4">
                         {service.price}
                       </div>
                     </div>
@@ -288,42 +385,54 @@ const Services = () => {
                     <Link
                       to="/book"
                       state={{ selectedService: `${service.name} - ${service.price}` }}
-                      className="bg-gradient-to-r from-salon-pink to-pink-400 text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-sm text-center inline-block"
+                      className="bg-gradient-to-r from-salon-pink to-pink-400 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-center inline-block"
                     >
-                      Select
+                      Select Service
                     </Link>
                   </div>
                 </div>
               </div>
 
-              {/* Desktop Layout (Original) */}
+              {/* Desktop Layout (Original) - Enhanced */}
               <div className="hidden lg:block">
                 <div className="flex">
                   {/* Image */}
-                  <div className="w-32 h-32 flex-shrink-0">
+                  <div className="w-40 h-40 flex-shrink-0 relative overflow-hidden group">
                     <img
                       src={service.image}
                       alt={service.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     />
+                    {/* Preview Button for Desktop */}
+                    <button
+                      onClick={() => openPreview(service.image, service.name)}
+                      className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm text-gray-800 p-2 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <ZoomIn className="h-4 w-4" />
+                    </button>
                   </div>
 
                   {/* Content */}
                   <div className="flex-1 p-6 flex justify-between items-center">
                     <div className="flex-1">
                       {/* Service Title */}
-                      <h3 className="text-lg font-bold text-gray-800 mb-2 uppercase tracking-wide">
+                      <h3 className="text-xl font-bold text-gray-800 mb-2 uppercase tracking-wide">
                         {service.name}
                       </h3>
 
+                      {/* Description */}
+                      <p className="text-gray-600 text-sm mb-3 leading-relaxed max-w-2xl">
+                        {service.description}
+                      </p>
+
                       {/* Duration */}
-                      <div className="flex items-center text-gray-600 mb-1">
+                      <div className="flex items-center text-gray-600 mb-2">
                         <Clock className="h-4 w-4 mr-2 text-gray-500" />
-                        <span className="text-sm">{service.duration}</span>
+                        <span className="text-sm font-medium">{service.duration}</span>
                       </div>
 
                       {/* Price */}
-                      <div className="text-2xl font-bold text-salon-pink mb-2">
+                      <div className="text-2xl font-bold text-salon-pink">
                         {service.price}
                       </div>
                     </div>
@@ -333,9 +442,9 @@ const Services = () => {
                       <Link
                         to="/book"
                         state={{ selectedService: `${service.name} - ${service.price}` }}
-                        className="bg-gradient-to-r from-salon-pink to-pink-400 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-sm"
+                        className="bg-gradient-to-r from-salon-pink to-pink-400 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200"
                       >
-                        Select
+                        Select Service
                       </Link>
                     </div>
                   </div>
@@ -362,6 +471,44 @@ const Services = () => {
           </Link>
         </div>
       </div>
+
+      {/* Full-Screen Image Preview Modal */}
+      {previewImage && (
+        <div 
+          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 animate-fade-in"
+          onClick={handleModalClick}
+        >
+          {/* Close Button */}
+          <button
+            onClick={closePreview}
+            className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white p-3 rounded-full hover:bg-white/30 transition-all duration-200 z-10"
+          >
+            <X className="h-6 w-6" />
+          </button>
+
+          {/* Image Container */}
+          <div className="relative max-w-4xl max-h-full w-full h-full flex items-center justify-center">
+            <img
+              src={previewImage.src}
+              alt={previewImage.name}
+              className="max-w-full max-h-full object-contain rounded-lg shadow-2xl animate-slide-up"
+              style={{ animationDelay: '0.1s' }}
+            />
+            
+            {/* Image Title */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 backdrop-blur-sm text-white px-6 py-3 rounded-full">
+              <h3 className="text-lg font-semibold uppercase tracking-wide text-center">
+                {previewImage.name}
+              </h3>
+            </div>
+          </div>
+
+          {/* Instructions */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white/70 text-sm text-center">
+            <p>Tap outside the image or press the X to close</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

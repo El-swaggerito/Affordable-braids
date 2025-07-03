@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Calendar, Clock, User, Mail, Phone, MessageSquare, Scissors, AlertCircle, DollarSign, Shield, RefreshCw, Upload, CreditCard } from 'lucide-react';
 import emailjs from '@emailjs/browser';
@@ -23,31 +23,64 @@ const BookAppointment = () => {
   const [depositScreenshot, setDepositScreenshot] = useState<File | null>(null);
   const [depositPreview, setDepositPreview] = useState<string | null>(null);
 
+  // Update the services array to match exactly what's being passed from Services page
   const services = [
-    'Large Knotless - $155',
-    'Cornrows - $30',
-    'Large Knotless (Premium) - $165',
-    'Large Boho Braids - $175',
-    'Medium French Curls - $185',
-    'Small Waist Length Knotless - $210',
-    'Small Knotless - $180',
-    'Bob Braids - $110',
-    'Men\'s Twist - $95',
-    'Diva Braids - $175',
-    'Stitches Braid - $140',
-    'Short Butterfly Locs - $120',
-    'Boho Stitches Braid (Short) - $165',
-    'Boho Stitches Braid (Long) - $185',
-    'Medium Butt Knotless Braid - $190',
-    'Twist - $145',
-    'Butterfly Locs - $170',
-    'Short Boho Braid - $145',
-    'French Curl - $175',
-    'Waist Length Medium Boho Braids - $185',
-    'Medium Mid Back Boho Braid - $165',
-    'Faux Locs - $150',
-    'Butt Length Locs - $185'
+    'LARGE KNOTLESS - $155',
+    'CORNROWS - $30',
+    'LARGE KNOTLESS (Premium) - $165',
+    'LARGE BOHO BRAIDS - $175',
+    'MEDIUM FRENCH CURLS - $185',
+    'SMALL WAIST LENGTH KNOTLESS - $210',
+    'SMALL KNOTLESS - $180',
+    'BOB BRAIDS - $110',
+    'MEN\'S TWIST - $95',
+    'DIVA BRAIDS - $175',
+    'CONROW STITCHES BRAIDS (Short) - $80',
+    'CONROW STITCHES BRAIDS (Medium) - $90',
+    'CONROW STITCHES BRAIDS (Long) - $120',
+    'SHORT BUTTERFLY LOCS - $120',
+    'BOHO STITCHES BRAID (Short) - $165',
+    'BOHO STITCHES BRAID (Long) - $185',
+    'MEDIUM BUTT KNOTLESS BRAID - $190',
+    'TWIST - $145',
+    'BUTTERFLY LOCS - $170',
+    'SHORT BOHO BRAID - $145',
+    'FRENCH CURL - $175',
+    'WAIST LENGTH MEDIUM BOHO BRAIDS - $185',
+    'MEDIUM MID BACK BOHO BRAID - $165',
+    'FAUX LOCS - $150',
+    'BUTT LENGTH LOCS - $185',
+    'FULANI BRAIDS - $140'
   ];
+
+  // Effect to handle service pre-selection when coming from Services page
+  useEffect(() => {
+    if (selectedService) {
+      console.log('Selected service from Services page:', selectedService);
+      
+      // Find exact match or closest match in services array
+      const exactMatch = services.find(service => service === selectedService);
+      
+      if (exactMatch) {
+        setFormData(prev => ({ ...prev, service: exactMatch }));
+        console.log('Exact match found:', exactMatch);
+      } else {
+        // Try to find a partial match by service name
+        const serviceName = selectedService.split(' - ')[0];
+        const partialMatch = services.find(service => 
+          service.toUpperCase().includes(serviceName.toUpperCase())
+        );
+        
+        if (partialMatch) {
+          setFormData(prev => ({ ...prev, service: partialMatch }));
+          console.log('Partial match found:', partialMatch);
+        } else {
+          console.log('No match found for:', selectedService);
+          console.log('Available services:', services);
+        }
+      }
+    }
+  }, [selectedService]);
 
   // Updated time slots based on business hours
   const getTimeSlots = (selectedDate: string) => {
@@ -56,21 +89,8 @@ const BookAppointment = () => {
     const date = new Date(selectedDate);
     const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, etc.
     
-    switch (dayOfWeek) {
-      case 1: // Monday: 3PM-10PM
-        return ['3:00 PM', '3:30 PM', '4:00 PM', '4:30 PM', '5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM', '7:00 PM', '7:30 PM', '8:00 PM', '8:30 PM', '9:00 PM', '9:30 PM'];
-      case 2: // Tuesday: 7PM-10PM
-      case 3: // Wednesday: 7PM-10PM
-        return ['7:00 PM', '7:30 PM', '8:00 PM', '8:30 PM', '9:00 PM', '9:30 PM'];
-      case 4: // Thursday: 2PM-10PM
-      case 5: // Friday: 2PM-10PM
-        return ['2:00 PM', '2:30 PM', '3:00 PM', '3:30 PM', '4:00 PM', '4:30 PM', '5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM', '7:00 PM', '7:30 PM', '8:00 PM', '8:30 PM', '9:00 PM', '9:30 PM'];
-      case 6: // Saturday: 7AM-10PM
-      case 0: // Sunday: 7AM-10PM
-        return ['7:00 AM', '7:30 AM', '8:00 AM', '8:30 AM', '9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', '1:00 PM', '1:30 PM', '2:00 PM', '2:30 PM', '3:00 PM', '3:30 PM', '4:00 PM', '4:30 PM', '5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM', '7:00 PM', '7:30 PM', '8:00 PM', '8:30 PM', '9:00 PM', '9:30 PM'];
-      default:
-        return [];
-    }
+    // All days: 7AM-10PM
+    return ['7:00 AM', '7:30 AM', '8:00 AM', '8:30 AM', '9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', '1:00 PM', '1:30 PM', '2:00 PM', '2:30 PM', '3:00 PM', '3:30 PM', '4:00 PM', '4:30 PM', '5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM', '7:00 PM', '7:30 PM', '8:00 PM', '8:30 PM', '9:00 PM', '9:30 PM'];
   };
 
   const timeSlots = getTimeSlots(formData.date);
@@ -204,7 +224,7 @@ const BookAppointment = () => {
     }
 
     if (!depositScreenshot) {
-      alert('Please upload a screenshot of your $15 Interac e-Transfer deposit before booking.');
+      alert('Please upload a screenshot of your $25 Interac e-Transfer deposit before booking.');
       return;
     }
 
@@ -220,7 +240,8 @@ const BookAppointment = () => {
       // Updated EmailJS configuration with proper error handling
       const emailjsConfig = {
         serviceId: 'service_97luys4',
-        templateId: 'template_o2gk8oa', 
+        businessTemplateId: 'template_o2gk8oa', // Business notification template
+        customerTemplateId: 'template_th5rbzg', // Customer auto-reply template
         publicKey: '4fDtVpq9MOCHBtLst'
       };
       
@@ -239,8 +260,8 @@ const BookAppointment = () => {
         throw new Error('Email service initialization failed');
       }
       
-      // Prepare template parameters for EmailJS
-      const templateParams = {
+      // Prepare template parameters for business owner email (you receive this)
+      const businessTemplateParams = {
         from_name: formData.fullName,
         from_email: formData.email,
         phone: formData.phone,
@@ -250,7 +271,7 @@ const BookAppointment = () => {
         notes: formData.notes || 'No additional notes provided',
         deposit_screenshot_url: imageUrl,
         agreed_policies: 'Yes - Customer agreed to all scheduling policies',
-        to_email: 'Adedejitiwalade8@gmail.com',
+        to_email: 'Adedejitiwalade8@gmail.com', // Your email (business owner)
         // Additional fields for better email formatting
         appointment_summary: `New appointment request from ${formData.fullName} for ${formData.service} on ${formData.date} at ${formData.time}`,
         customer_details: `Name: ${formData.fullName}\nEmail: ${formData.email}\nPhone: ${formData.phone}`,
@@ -258,30 +279,67 @@ const BookAppointment = () => {
         deposit_status: 'Deposit screenshot uploaded and available via link'
       };
 
-      console.log('Sending email with EmailJS...');
+      // Prepare template parameters for customer auto-reply email (customer receives this)
+      const customerTemplateParams = {
+        to_email: formData.email, // Customer's email (they receive this)
+        from_name: formData.fullName, // Customer's name for personalization
+        service: formData.service,
+        date: formData.date,
+        time: formData.time,
+        business_name: 'Affordable Braids',
+        business_phone: '(437) 983-6451',
+        business_address: '1530 Victoria Park Avenue, Toronto, ON'
+      };
+
+      console.log('Sending emails with EmailJS...');
+      console.log('Business email will be sent to:', businessTemplateParams.to_email);
+      console.log('Customer email will be sent to:', customerTemplateParams.to_email);
       
-      // Send email using EmailJS with improved error handling and timeout
-      const response = await Promise.race([
-        emailjs.send(
-          emailjsConfig.serviceId,
-          emailjsConfig.templateId,
-          templateParams,
-          {
-            publicKey: emailjsConfig.publicKey,
-          }
-        ),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
-        )
-      ]) as any;
+      // Send business email first (notification to you)
+      console.log('Sending business notification email...');
+      const businessEmailResponse = await emailjs.send(
+        emailjsConfig.serviceId,
+        emailjsConfig.businessTemplateId,
+        businessTemplateParams,
+        {
+          publicKey: emailjsConfig.publicKey,
+        }
+      );
 
-      console.log('EmailJS response:', response);
+      console.log('Business email response:', businessEmailResponse);
 
-      if (response && (response.status === 200 || response.text === 'OK')) {
-        console.log('Email sent successfully');
+      // Send auto-reply email to customer (confirmation to them)
+      console.log('Sending customer auto-reply email...');
+      const customerEmailResponse = await emailjs.send(
+        emailjsConfig.serviceId,
+        emailjsConfig.customerTemplateId,
+        customerTemplateParams,
+        {
+          publicKey: emailjsConfig.publicKey,
+        }
+      );
+
+      console.log('Customer email response:', customerEmailResponse);
+
+      // Check if both emails were sent successfully
+      if (
+        (businessEmailResponse && (businessEmailResponse.status === 200 || businessEmailResponse.text === 'OK')) &&
+        (customerEmailResponse && (customerEmailResponse.status === 200 || customerEmailResponse.text === 'OK'))
+      ) {
+        console.log('Both emails sent successfully');
         navigate('/thank-you');
       } else {
-        throw new Error(`EmailJS returned unexpected response: ${JSON.stringify(response)}`);
+        console.warn('One or both emails may have failed:', {
+          business: businessEmailResponse,
+          customer: customerEmailResponse
+        });
+        // Still navigate to thank you page if business email succeeded
+        if (businessEmailResponse && (businessEmailResponse.status === 200 || businessEmailResponse.text === 'OK')) {
+          console.log('Business email sent successfully, proceeding despite customer email issue');
+          navigate('/thank-you');
+        } else {
+          throw new Error(`Business email failed: ${JSON.stringify(businessEmailResponse)}`);
+        }
       }
 
     } catch (error) {
@@ -330,6 +388,13 @@ const BookAppointment = () => {
             Schedule your visit with us and let us create the perfect protective style for you. 
             We'll confirm your appointment within 24 hours.
           </p>
+          {selectedService && (
+            <div className="mt-4 p-4 bg-salon-pink/10 rounded-xl max-w-md mx-auto">
+              <p className="text-salon-pink font-semibold">
+                ✨ Selected Service: {selectedService}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Interac e-Transfer Payment Instructions */}
@@ -339,20 +404,20 @@ const BookAppointment = () => {
               <div className="bg-blue-500/20 p-3 rounded-full mr-4">
                 <CreditCard className="h-6 w-6 text-blue-600" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-800">Payment Instructions - $15 Deposit Required</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Payment Instructions - $25 Deposit Required</h2>
             </div>
 
             <div className="bg-white rounded-xl p-6 shadow-md">
               <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                 <DollarSign className="h-5 w-5 text-green-600 mr-2" />
-                How to Send Your $15 Deposit via Interac e-Transfer
+                How to Send Your $25 Deposit via Interac e-Transfer
               </h3>
               
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <h4 className="font-semibold text-gray-700 mb-3">Step 1: Send Interac e-Transfer</h4>
                   <ul className="text-gray-600 space-y-2 text-sm">
-                    <li>• <strong>Amount:</strong> $15.00 CAD</li>
+                    <li>• <strong>Amount:</strong> $25.00 CAD</li>
                     <li>• <strong>Email:</strong> Adedejitiwalade8@gmail.com</li>
                     <li>• <strong>Message:</strong> Include your full name and preferred appointment date</li>
                     <li>• <strong>Security Question:</strong> Use any question you prefer</li>
@@ -363,7 +428,7 @@ const BookAppointment = () => {
                   <h4 className="font-semibold text-gray-700 mb-3">Step 2: Upload Screenshot</h4>
                   <ul className="text-gray-600 space-y-2 text-sm">
                     <li>• Take a screenshot of your successful e-Transfer</li>
-                    <li>• Make sure the amount ($15) and email are visible</li>
+                    <li>• Make sure the amount ($25) and email are visible</li>
                     <li>• Upload the screenshot in the form below</li>
                     <li>• This confirms your deposit and secures your appointment</li>
                   </ul>
@@ -373,7 +438,7 @@ const BookAppointment = () => {
               <div className="mt-4 p-4 bg-blue-50 rounded-lg">
                 <p className="text-sm text-gray-700">
                   <strong>Important:</strong> Your appointment request cannot be processed without the deposit screenshot. 
-                  This $15 deposit is non-refundable and non-transferable, and will be deducted from your total service cost.
+                  This $25 deposit is non-refundable and non-transferable, and will be deducted from your total service cost.
                 </p>
               </div>
             </div>
@@ -398,7 +463,7 @@ const BookAppointment = () => {
                   <h3 className="text-lg font-semibold text-gray-800">Deposit Policy</h3>
                 </div>
                 <ul className="text-gray-600 space-y-2 text-sm">
-                  <li>• A <strong>$15 non-refundable and non-transferable</strong> deposit is required to secure your appointment</li>
+                  <li>• A <strong>$25 non-refundable and non-transferable</strong> deposit is required to secure your appointment</li>
                   <li>• This deposit goes toward your total balance</li>
                   <li>• No payments are accepted in advance beyond the deposit</li>
                   <li>• If I cancel your appointment, your deposit will be refunded within 3-5 business days</li>
@@ -482,7 +547,7 @@ const BookAppointment = () => {
                   <div>
                     <p className="font-semibold text-gray-800">Interac e-Transfer</p>
                     <p className="text-gray-600">Adedejitiwalade8@gmail.com</p>
-                    <p className="text-xs text-gray-500 mt-1">For $15 deposit payments</p>
+                    <p className="text-xs text-gray-500 mt-1">For $25 deposit payments</p>
                   </div>
                 </div>
                 
@@ -493,10 +558,7 @@ const BookAppointment = () => {
                   <div>
                     <p className="font-semibold text-gray-800">Business Hours</p>
                     <div className="text-gray-600 text-sm space-y-1">
-                      <p>Monday: 3PM-10PM</p>
-                      <p>Tue-Wed: 7PM-10PM</p>
-                      <p>Thu-Fri: 2PM-10PM</p>
-                      <p>Sat-Sun: 7AM-10PM</p>
+                      <p>Everyday: 7AM-10PM</p>
                     </div>
                   </div>
                 </div>
@@ -685,7 +747,7 @@ const BookAppointment = () => {
                           </div>
                           <div>
                             <p className="text-gray-600 font-medium">
-                              Upload your $15 Interac e-Transfer screenshot
+                              Upload your $25 Interac e-Transfer screenshot
                             </p>
                             <p className="text-sm text-gray-500 mt-1">
                               PNG, JPG, or other image formats (max 10MB)
@@ -696,7 +758,7 @@ const BookAppointment = () => {
                     </label>
                   </div>
                   <p className="text-xs text-gray-500 mt-2">
-                    Make sure the screenshot shows the $15 amount and recipient email (Adedejitiwalade8@gmail.com). 
+                    Make sure the screenshot shows the $25 amount and recipient email (Adedejitiwalade8@gmail.com). 
                     Your image will be securely uploaded and a link will be sent in the email.
                   </p>
                 </div>
@@ -728,7 +790,7 @@ const BookAppointment = () => {
                       required
                     />
                     <span className="text-sm text-gray-700">
-                      I have read and agree to the <strong>scheduling policies</strong> above, including the deposit, cancellation, and rescheduling terms. I understand that a $15 non-refundable deposit via Interac e-Transfer is required to secure my appointment.
+                      I have read and agree to the <strong>scheduling policies</strong> above, including the deposit, cancellation, and rescheduling terms. I understand that a $25 non-refundable deposit via Interac e-Transfer is required to secure my appointment.
                     </span>
                   </label>
                 </div>
