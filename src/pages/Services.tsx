@@ -90,7 +90,7 @@ const Services = () => {
       id: 11,
       name: "CONROW STITCHES BRAIDS (Short)",
       description: "Intricate stitched braiding pattern that creates a unique textured look with artistic flair and precision.",
-      price: "$80",
+      price: "$60",
       duration: "4 hr",
       image: "/Fulani.jpg"
     },
@@ -98,7 +98,7 @@ const Services = () => {
       id: 12,
       name: "CONROW STITCHES BRAIDS (Medium)",
       description: "Intricate stitched braiding pattern that creates a unique textured look with artistic flair and precision.",
-      price: "$90",
+      price: "$75",
       duration: "4 hr",
       image: "/Fulani.jpg"
     },
@@ -106,7 +106,7 @@ const Services = () => {
       id: 13,
       name: "CONROW STITCHES BRAIDS (Long)",
       description: "Intricate stitched braiding pattern that creates a unique textured look with artistic flair and precision.",
-      price: "$120",
+      price: "$85",
       duration: "4 hr",
       image: "/Fulani.jpg"
     },
