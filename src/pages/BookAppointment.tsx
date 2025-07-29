@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Calendar, Clock, User, Mail, Phone, MessageSquare, Scissors, AlertCircle, DollarSign, Shield, RefreshCw, Upload, CreditCard } from 'lucide-react';
 import emailjs from '@emailjs/browser';
@@ -82,20 +82,47 @@ const BookAppointment = () => {
     }
   }, [selectedService]);
 
-  // Updated time slots based on business hours
-  const getTimeSlots = (selectedDate: string) => {
-    if (!selectedDate) return [];
-    
-    const date = new Date(selectedDate);
-    const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, etc.
-    
-    // All days: 7AM-10PM
-    return ['7:00 AM', '7:30 AM', '8:00 AM', '8:30 AM', '9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', '1:00 PM', '1:30 PM', '2:00 PM', '2:30 PM', '3:00 PM', '3:30 PM', '4:00 PM', '4:30 PM', '5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM', '7:00 PM', '7:30 PM', '8:00 PM', '8:30 PM', '9:00 PM', '9:30 PM'];
+    const formatHour = (hour: number): string => {
+    const h = hour % 12 === 0 ? 12 : hour % 12;
+    const suffix = hour < 12 ? 'AM' : 'PM';
+    return `${h}:00 ${suffix}`;
   };
 
-  const timeSlots = getTimeSlots(formData.date);
+    const formatHalfHour = (hour: number): string => {
+    const h = hour % 12 === 0 ? 12 : hour % 12;
+    const suffix = hour < 12 ? 'AM' : 'PM';
+    return `${h}:30 ${suffix}`;
+  };
 
-  // Set minimum date to today
+  // Updated time slots based on business hours
+const getTimeSlots = (selectedDate: string): string[] => {
+    if (!selectedDate) return [];
+
+    const date = new Date(selectedDate);
+    const dayOfWeek = date.getDay();
+
+    let startHour = 0;
+    switch (dayOfWeek) {
+      case 1: startHour = 15; break; // Monday: 3PM
+      case 2:
+      case 3: startHour = 19; break; // Tue-Wed: 7PM
+      case 4:
+      case 5: startHour = 14; break; // Thu-Fri: 2PM
+      case 0:
+      case 6: startHour = 7; break;  // Sat-Sun: 7AM
+      default: return [];
+    }
+
+    const slots: string[] = [];
+    for (let hour = startHour; hour <= 21; hour++) {
+      slots.push(`${formatHour(hour)}`);
+      slots.push(`${formatHalfHour(hour)}`);
+    }
+    slots.push('10:00 PM');
+    return slots;
+  };
+
+  const timeSlots = useMemo(() => getTimeSlots(formData.date), [formData.date]);
   const today = new Date().toISOString().split('T')[0];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
