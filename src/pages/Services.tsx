@@ -8,9 +8,9 @@ const Services = () => {
   const services = [
     {
       id: 1,
-      name: "LARGE KNOTLESS",
+      name: "LARGE KNOTLESS (Mid Back)",
       description: "Gentle knotless braiding technique without knots at the root for reduced tension and a natural look.",
-      price: "$155",
+      price: "$160",
       duration: "4 hr. 30 mins",
       image: "/Large knotless 155.jpg"
     },
@@ -18,13 +18,13 @@ const Services = () => {
       id: 2,
       name: "CORNROWS",
       description: "Traditional braided style close to the scalp in straight lines or intricate patterns.",
-      price: "$30",
+      price: "$40",
       duration: "1 hr. 15 mins",
       image: "/Conrow 30.jpg"
     },
     {
       id: 3,
-      name: "LARGE KNOTLESS (Premium)",
+      name: "LARGE KNOTLESS (Waist Length)",
       description: "Premium large knotless braids with superior technique and longer-lasting results using high-quality hair extensions.",
       price: "$165",
       duration: "5 hr",
@@ -34,15 +34,15 @@ const Services = () => {
       id: 4,
       name: "LARGE BOHO BRAIDS",
       description: "Bohemian-style large braids with curly ends for a natural, textured boho look that's trendy and effortless.",
-      price: "$175",
+      price: "$180",
       duration: "5 hr. 30 mins",
       image: "/Large boho braid 175.jpg"
     },
     {
       id: 5,
-      name: "MEDIUM FRENCH CURLS",
+      name: "MEDIUM FRENCH CURLS (Waist Length)",
       description: "Medium-sized braids with beautiful French curl ends for an elegant, voluminous style that turns heads.",
-      price: "$185",
+      price: "$190",
       duration: "6 hr",
       image: "/Medium French curl 185.jpg"
     },
@@ -50,15 +50,15 @@ const Services = () => {
       id: 6,
       name: "SMALL WAIST LENGTH KNOTLESS",
       description: "Ultra-long small knotless braids that reach waist length for a dramatic, stunning look that makes a statement.",
-      price: "$210",
+      price: "$240",
       duration: "8 hr",
       image: "/Small waist length knotless 210.jpg"
     },
     {
       id: 7,
-      name: "SMALL KNOTLESS",
+      name: "SMALL KNOTLESS (Mid Back)",
       description: "Delicate small knotless braids that offer versatility and a refined protective style for any occasion.",
-      price: "$180",
+      price: "$195",
       duration: "6 hr. 30 mins",
       image: "/Small Knotless.jpg"
     },
@@ -66,9 +66,9 @@ const Services = () => {
       id: 8,
       name: "BOB BRAIDS",
       description: "Chic shoulder-length braids perfect for a modern, professional look with easy maintenance and style.",
-      price: "$110",
+      price: "$140",
       duration: "3 hr",
-      image: "/Bob braids.webp"
+      image: "/Bob braids.jpeg"
     },
     {
       id: 9,
@@ -82,35 +82,35 @@ const Services = () => {
       id: 10,
       name: "DIVA BRAIDS",
       description: "Glamorous statement braids that make you feel like a true diva with bold, eye-catching style.",
-      price: "$175",
+      price: "$195",
       duration: "5 hr. 15 mins",
-      image: "/Diva braid 175.jpg"
+      image: "/Diva braid.jpeg"
     },
     {
       id: 11,
       name: "CONROW STITCHES BRAIDS (Short)",
       description: "Intricate stitched braiding pattern that creates a unique textured look with artistic flair and precision.",
-      price: "$60",
+      price: "$95",
       duration: "4 hr",
-      image: "/Fulani.jpg"
+      image: "/CONROW STITCHES BRAIDS.jpeg"
     },
-        {
+    {
       id: 12,
       name: "CONROW STITCHES BRAIDS (Medium)",
       description: "Intricate stitched braiding pattern that creates a unique textured look with artistic flair and precision.",
-      price: "$75",
+      price: "$100",
       duration: "4 hr",
-      image: "/Fulani.jpg"
+      image: "/CONROW STITCHES BRAIDS.jpeg"
     },
-        {
+    {
       id: 13,
       name: "CONROW STITCHES BRAIDS (Long)",
       description: "Intricate stitched braiding pattern that creates a unique textured look with artistic flair and precision.",
-      price: "$85",
+      price: "$120",
       duration: "4 hr",
-      image: "/Fulani.jpg"
+      image: "/CONROW STITCHES BRAIDS.jpeg"
     },
-    
+
     {
       id: 14,
       name: "SHORT BUTTERFLY LOCS",
@@ -131,7 +131,7 @@ const Services = () => {
       id: 16,
       name: "BOHO STITCHES BRAID (Long)",
       description: "Long bohemian-inspired stitch braids with loose, flowing texture for a dramatic free-spirited look.",
-      price: "$185",
+      price: "$210",
       duration: "6 hr. 15 mins",
       image: "/Boho switches braid.jpg"
     },
@@ -153,9 +153,9 @@ const Services = () => {
     },
     {
       id: 19,
-      name: "BUTTERFLY LOCS",
+      name: "BUTTERFLY LOCS (Long)",
       description: "Beautiful butterfly locs with natural texture and movement for a trendy, bohemian-inspired look.",
-      price: "$170",
+      price: "$180",
       duration: "5 hr",
       image: "/Butterfly locs 170.jpg"
     },
@@ -169,7 +169,7 @@ const Services = () => {
     },
     {
       id: 21,
-      name: "FRENCH CURL",
+      name: "FRENCH CURL (Mid Back)",
       description: "Elegant French curl braids with bouncy, voluminous curls for a sophisticated and glamorous look.",
       price: "$175",
       duration: "5 hr. 30 mins",
@@ -179,7 +179,7 @@ const Services = () => {
       id: 22,
       name: "WAIST LENGTH MEDIUM BOHO BRAIDS",
       description: "Medium-sized boho braids extending to waist length with beautiful textured ends.",
-      price: "$185",
+      price: "$195",
       duration: "6 hr. 30 mins",
       image: "/Waist length medium boho braids 185.jpg"
     },
@@ -187,9 +187,9 @@ const Services = () => {
       id: 23,
       name: "MEDIUM MID BACK BOHO BRAID",
       description: "Medium boho braids reaching mid-back length with natural texture and bohemian flair.",
-      price: "$165",
+      price: "$170",
       duration: "5 hr. 45 mins",
-      image: "/Medium mid back boho braid 165.jpg"
+      image: "/Medium mid back boho braid.jpeg"
     },
     {
       id: 24,
@@ -207,7 +207,7 @@ const Services = () => {
       duration: "7 hr. 30 mins",
       image: "/length locs.jpg"
     },
-        {
+    {
       id: 26,
       name: "FULANI BRAIDS",
       description: "Fulani braids are a traditional West African hairstyle featuring cornrows at the front and box braids at the back, often adorned with beads or cowrie shells.",
@@ -245,7 +245,7 @@ const Services = () => {
             Our <span className="bg-gradient-to-r from-salon-pink to-pink-500 bg-clip-text text-transparent">Braiding Services</span>
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
-            Discover our comprehensive range of professional braiding services, each designed to protect your natural hair 
+            Discover our comprehensive range of professional braiding services, each designed to protect your natural hair
             while keeping you looking absolutely stunning.
           </p>
         </div>
@@ -255,19 +255,19 @@ const Services = () => {
           {services.map((service, index) => (
             <div
               key={service.id}
-              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden animate-slide-up border border-gray-100"
+              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden animate-slide-up border border-gray-100 flex flex-col h-full"
               style={{ animationDelay: `${index * 0.05}s` }}
             >
               {/* Mobile Layout (Stack Vertically) - With Preview Button */}
-              <div className="block sm:hidden">
+              <div className="flex sm:hidden flex-col h-full">
                 {/* Large Image for Mobile with Preview Button */}
-                <div className="w-full h-80 relative overflow-hidden group">
+                <div className="w-full h-80 relative flex-shrink-0 overflow-hidden group">
                   <img
                     src={service.image}
                     alt={service.name}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   />
-                  
+
                   {/* Preview Button Overlay */}
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <button
@@ -282,7 +282,7 @@ const Services = () => {
                   {/* Always visible preview button in corner */}
                   <button
                     onClick={() => openPreview(service.image, service.name)}
-                    className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-gray-800 p-2 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200 sm:hidden"
+                    className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-gray-800 p-2 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200 sm:hidden z-10"
                   >
                     <ZoomIn className="h-4 w-4" />
                   </button>
@@ -292,30 +292,32 @@ const Services = () => {
                 </div>
 
                 {/* Content */}
-                <div className="p-5">
-                  {/* Service Title */}
-                  <h3 className="text-xl font-bold text-gray-800 mb-3 uppercase tracking-wide leading-tight">
-                    {service.name}
-                  </h3>
+                <div className="p-5 flex-1 flex flex-col justify-between">
+                  <div>
+                    {/* Service Title */}
+                    <h3 className="text-xl font-bold text-gray-800 mb-3 uppercase tracking-wide leading-tight">
+                      {service.name}
+                    </h3>
 
-                  {/* Description */}
-                  <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-                    {service.description}
-                  </p>
+                    {/* Description */}
+                    <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+                      {service.description}
+                    </p>
 
-                  {/* Duration and Price Row */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center text-gray-600">
-                      <Clock className="h-4 w-4 mr-2 text-gray-500" />
-                      <span className="text-sm font-medium">{service.duration}</span>
-                    </div>
-                    <div className="text-2xl font-bold text-salon-pink">
-                      {service.price}
+                    {/* Duration and Price Row */}
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center text-gray-600">
+                        <Clock className="h-4 w-4 mr-2 text-gray-500" />
+                        <span className="text-sm font-medium">{service.duration}</span>
+                      </div>
+                      <div className="text-2xl font-bold text-salon-pink">
+                        {service.price}
+                      </div>
                     </div>
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="space-y-3">
+                  <div className="space-y-3 mt-auto">
                     {/* Preview Button for Mobile */}
                     <button
                       onClick={() => openPreview(service.image, service.name)}
@@ -338,26 +340,26 @@ const Services = () => {
               </div>
 
               {/* Tablet Layout (Side by Side) - Enhanced */}
-              <div className="hidden sm:block lg:hidden">
-                <div className="flex">
+              <div className="hidden sm:flex lg:hidden h-full">
+                <div className="flex items-stretch w-full">
                   {/* Larger Image for Tablet */}
-                  <div className="w-48 h-48 flex-shrink-0 relative overflow-hidden group">
+                  <div className="w-48 md:w-56 flex-shrink-0 relative overflow-hidden group">
                     <img
                       src={service.image}
                       alt={service.name}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     />
                     {/* Preview Button for Tablet */}
                     <button
                       onClick={() => openPreview(service.image, service.name)}
-                      className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm text-gray-800 p-2 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200"
+                      className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm text-gray-800 p-2 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200 z-10"
                     >
                       <ZoomIn className="h-4 w-4" />
                     </button>
                   </div>
 
                   {/* Content */}
-                  <div className="flex-1 p-6 flex flex-col justify-between">
+                  <div className="flex-1 p-6 flex flex-col justify-center">
                     <div>
                       {/* Service Title */}
                       <h3 className="text-xl font-bold text-gray-800 mb-3 uppercase tracking-wide">
@@ -382,31 +384,33 @@ const Services = () => {
                     </div>
 
                     {/* Select Button */}
-                    <Link
-                      to="/book"
-                      state={{ selectedService: `${service.name} - ${service.price}` }}
-                      className="bg-gradient-to-r from-salon-pink to-pink-400 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-center inline-block"
-                    >
-                      Select Service
-                    </Link>
+                    <div className="mt-2">
+                      <Link
+                        to="/book"
+                        state={{ selectedService: `${service.name} - ${service.price}` }}
+                        className="bg-gradient-to-r from-salon-pink to-pink-400 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 text-center inline-block"
+                      >
+                        Select Service
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Desktop Layout (Original) - Enhanced */}
-              <div className="hidden lg:block">
-                <div className="flex">
+              <div className="hidden lg:flex h-full">
+                <div className="flex items-stretch w-full">
                   {/* Image */}
-                  <div className="w-40 h-40 flex-shrink-0 relative overflow-hidden group">
+                  <div className="w-56 flex-shrink-0 relative overflow-hidden group">
                     <img
                       src={service.image}
                       alt={service.name}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     />
                     {/* Preview Button for Desktop */}
                     <button
                       onClick={() => openPreview(service.image, service.name)}
-                      className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm text-gray-800 p-2 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm text-gray-800 p-2 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                     >
                       <ZoomIn className="h-4 w-4" />
                     </button>
@@ -438,11 +442,11 @@ const Services = () => {
                     </div>
 
                     {/* Select Button */}
-                    <div className="ml-6">
+                    <div className="ml-6 flex-shrink-0">
                       <Link
                         to="/book"
                         state={{ selectedService: `${service.name} - ${service.price}` }}
-                        className="bg-gradient-to-r from-salon-pink to-pink-400 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+                        className="bg-gradient-to-r from-salon-pink to-pink-400 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 inline-block"
                       >
                         Select Service
                       </Link>
@@ -460,7 +464,7 @@ const Services = () => {
             Ready for Your New Protective Style?
           </h2>
           <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
-            Book your appointment today and let us create the perfect braided look for you. 
+            Book your appointment today and let us create the perfect braided look for you.
             All services include a complimentary consultation and aftercare instructions.
           </p>
           <Link
@@ -474,7 +478,7 @@ const Services = () => {
 
       {/* Full-Screen Image Preview Modal */}
       {previewImage && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 animate-fade-in"
           onClick={handleModalClick}
         >
@@ -494,7 +498,7 @@ const Services = () => {
               className="max-w-full max-h-full object-contain rounded-lg shadow-2xl animate-slide-up"
               style={{ animationDelay: '0.1s' }}
             />
-            
+
             {/* Image Title */}
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 backdrop-blur-sm text-white px-6 py-3 rounded-full">
               <h3 className="text-lg font-semibold uppercase tracking-wide text-center">

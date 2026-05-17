@@ -7,7 +7,7 @@ const BookAppointment = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const selectedService = location.state?.selectedService || '';
-  
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -25,29 +25,29 @@ const BookAppointment = () => {
 
   // Update the services array to match exactly what's being passed from Services page
   const services = [
-    'LARGE KNOTLESS - $155',
-    'CORNROWS - $30',
-    'LARGE KNOTLESS (Premium) - $165',
-    'LARGE BOHO BRAIDS - $175',
-    'MEDIUM FRENCH CURLS - $185',
-    'SMALL WAIST LENGTH KNOTLESS - $210',
-    'SMALL KNOTLESS - $180',
-    'BOB BRAIDS - $110',
+    'LARGE KNOTLESS (Mid Back) - $160',
+    'LARGE KNOTLESS (Waist Length) - $165',
+    'CORNROWS - $40',
+    'LARGE BOHO BRAIDS - $180',
+    'MEDIUM FRENCH CURLS (Waist Length) - $190',
+    'SMALL WAIST LENGTH KNOTLESS - $240',
+    'SMALL KNOTLESS (Mid Back) - $195',
+    'BOB BRAIDS - $140',
     'MEN\'S TWIST - $95',
-    'DIVA BRAIDS - $175',
-    'CONROW STITCHES BRAIDS (Short) - $60',
-    'CONROW STITCHES BRAIDS (Medium) - $75',
-    'CONROW STITCHES BRAIDS (Long) - $85',
+    'DIVA BRAIDS - $195',
+    'CONROW STITCHES BRAIDS (Short) - $95',
+    'CONROW STITCHES BRAIDS (Medium) - $100',
+    'CONROW STITCHES BRAIDS (Long) - $120',
     'SHORT BUTTERFLY LOCS - $120',
     'BOHO STITCHES BRAID (Short) - $165',
-    'BOHO STITCHES BRAID (Long) - $185',
+    'BOHO STITCHES BRAID (Long) - $210',
     'MEDIUM BUTT KNOTLESS BRAID - $190',
     'TWIST - $145',
-    'BUTTERFLY LOCS - $170',
+    'BUTTERFLY LOCS (Long) - $180',
     'SHORT BOHO BRAID - $145',
-    'FRENCH CURL - $175',
-    'WAIST LENGTH MEDIUM BOHO BRAIDS - $185',
-    'MEDIUM MID BACK BOHO BRAID - $165',
+    'FRENCH CURL (Mid Back) - $175',
+    'WAIST LENGTH MEDIUM BOHO BRAIDS - $195',
+    'MEDIUM MID BACK BOHO BRAID - $170',
     'FAUX LOCS - $150',
     'BUTT LENGTH LOCS - $185',
     'FULANI BRAIDS - $140'
@@ -57,20 +57,20 @@ const BookAppointment = () => {
   useEffect(() => {
     if (selectedService) {
       console.log('Selected service from Services page:', selectedService);
-      
+
       // Find exact match or closest match in services array
       const exactMatch = services.find(service => service === selectedService);
-      
+
       if (exactMatch) {
         setFormData(prev => ({ ...prev, service: exactMatch }));
         console.log('Exact match found:', exactMatch);
       } else {
         // Try to find a partial match by service name
         const serviceName = selectedService.split(' - ')[0];
-        const partialMatch = services.find(service => 
+        const partialMatch = services.find(service =>
           service.toUpperCase().includes(serviceName.toUpperCase())
         );
-        
+
         if (partialMatch) {
           setFormData(prev => ({ ...prev, service: partialMatch }));
           console.log('Partial match found:', partialMatch);
@@ -82,20 +82,20 @@ const BookAppointment = () => {
     }
   }, [selectedService]);
 
-    const formatHour = (hour: number): string => {
+  const formatHour = (hour: number): string => {
     const h = hour % 12 === 0 ? 12 : hour % 12;
     const suffix = hour < 12 ? 'AM' : 'PM';
     return `${h}:00 ${suffix}`;
   };
 
-    const formatHalfHour = (hour: number): string => {
+  const formatHalfHour = (hour: number): string => {
     const h = hour % 12 === 0 ? 12 : hour % 12;
     const suffix = hour < 12 ? 'AM' : 'PM';
     return `${h}:30 ${suffix}`;
   };
 
   // Updated time slots based on business hours
-const getTimeSlots = (selectedDate: string): string[] => {
+  const getTimeSlots = (selectedDate: string): string[] => {
     if (!selectedDate) return [];
 
     const date = new Date(selectedDate);
@@ -141,21 +141,21 @@ const getTimeSlots = (selectedDate: string): string[] => {
       // Using imgbb.com as a free image hosting service
       const formData = new FormData();
       formData.append('image', file);
-      
+
       // Your actual imgbb API key
       const apiKey = import.meta.env.VITE_IMGBB_API_KEY;
-      
+
       const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
         method: 'POST',
         body: formData
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to upload image');
       }
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         return data.data.url;
       } else {
@@ -174,12 +174,12 @@ const getTimeSlots = (selectedDate: string): string[] => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       const img = new Image();
-      
+
       img.onload = () => {
         // Calculate new dimensions while maintaining aspect ratio
         let { width, height } = img;
         const maxDimension = 400; // Smaller for fallback
-        
+
         if (width > height && width > maxDimension) {
           height = (height * maxDimension) / width;
           width = maxDimension;
@@ -187,28 +187,28 @@ const getTimeSlots = (selectedDate: string): string[] => {
           width = (width * maxDimension) / height;
           height = maxDimension;
         }
-        
+
         canvas.width = width;
         canvas.height = height;
-        
+
         // Draw and compress image
         ctx?.drawImage(img, 0, 0, width, height);
-        
+
         // Function to try different quality levels
         const tryCompress = (quality: number): void => {
           const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
           const sizeInKB = (compressedDataUrl.length * 3) / 4 / 1024;
-          
+
           if (sizeInKB <= maxSizeKB || quality <= 0.1) {
             resolve(compressedDataUrl);
           } else {
             tryCompress(quality - 0.1);
           }
         };
-        
+
         tryCompress(0.6);
       };
-      
+
       img.onerror = () => reject(new Error('Failed to load image'));
       img.src = URL.createObjectURL(file);
     });
@@ -222,7 +222,7 @@ const getTimeSlots = (selectedDate: string): string[] => {
         alert('Please upload an image file (PNG, JPG, etc.)');
         return;
       }
-      
+
       // Validate file size (max 10MB for initial upload)
       if (file.size > 10 * 1024 * 1024) {
         alert('File size must be less than 10MB');
@@ -230,7 +230,7 @@ const getTimeSlots = (selectedDate: string): string[] => {
       }
 
       setDepositScreenshot(file);
-      
+
       // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -242,9 +242,9 @@ const getTimeSlots = (selectedDate: string): string[] => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     console.log('Form submission started');
-    
+
     if (!agreedToPolicies) {
       alert('Please agree to the scheduling policies before booking your appointment.');
       return;
@@ -259,11 +259,11 @@ const getTimeSlots = (selectedDate: string): string[] => {
 
     try {
       console.log('Uploading image to hosting service...');
-      
+
       // Upload image and get URL
       const imageUrl = await uploadImageToHost(depositScreenshot);
       console.log('Image uploaded successfully, URL:', imageUrl);
-      
+
       // Updated EmailJS configuration with proper error handling
       const emailjsConfig = {
         serviceId: 'service_97luys4',
@@ -271,7 +271,7 @@ const getTimeSlots = (selectedDate: string): string[] => {
         customerTemplateId: 'template_th5rbzg', // Customer auto-reply template
         publicKey: '4fDtVpq9MOCHBtLst'
       };
-      
+
       // Initialize EmailJS with proper configuration
       try {
         emailjs.init({
@@ -286,7 +286,7 @@ const getTimeSlots = (selectedDate: string): string[] => {
         console.error('EmailJS initialization error:', initError);
         throw new Error('Email service initialization failed');
       }
-      
+
       // Prepare template parameters for business owner email (you receive this)
       const businessTemplateParams = {
         from_name: formData.fullName,
@@ -321,7 +321,7 @@ const getTimeSlots = (selectedDate: string): string[] => {
       console.log('Sending emails with EmailJS...');
       console.log('Business email will be sent to:', businessTemplateParams.to_email);
       console.log('Customer email will be sent to:', customerTemplateParams.to_email);
-      
+
       // Send business email first (notification to you)
       console.log('Sending business notification email...');
       const businessEmailResponse = await emailjs.send(
@@ -371,10 +371,10 @@ const getTimeSlots = (selectedDate: string): string[] => {
 
     } catch (error) {
       console.error('Error in form submission:', error);
-      
+
       // Provide more specific error messages and fallback options
       let errorMessage = 'There was an error submitting your appointment request.\n\n';
-      
+
       if (error instanceof Error) {
         if (error.message.includes('Failed to fetch') || error.message.includes('Network')) {
           errorMessage += 'Network Error: Please check your internet connection and try again.\n\n';
@@ -390,13 +390,13 @@ const getTimeSlots = (selectedDate: string): string[] => {
       } else {
         errorMessage += 'Unknown Error: An unexpected error occurred.\n\n';
       }
-      
+
       errorMessage += 'ALTERNATIVE BOOKING OPTIONS:\n';
       errorMessage += '• Call us directly: +1 (437) 983-6451\n';
       errorMessage += '• Email us: Adedejitiwalade8@gmail.com\n';
       errorMessage += '• Include your deposit screenshot and all appointment details\n\n';
       errorMessage += 'We apologize for the inconvenience and will respond within 24 hours.';
-      
+
       alert(errorMessage);
     } finally {
       setIsSubmitting(false);
@@ -412,7 +412,7 @@ const getTimeSlots = (selectedDate: string): string[] => {
             Book Your <span className="bg-gradient-to-r from-salon-pink to-pink-500 bg-clip-text text-transparent">Braiding Appointment</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Schedule your visit with us and let us create the perfect protective style for you. 
+            Schedule your visit with us and let us create the perfect protective style for you.
             We'll confirm your appointment within 24 hours.
           </p>
           {selectedService && (
@@ -439,7 +439,7 @@ const getTimeSlots = (selectedDate: string): string[] => {
                 <DollarSign className="h-5 w-5 text-green-600 mr-2" />
                 How to Send Your $25 Deposit via Interac e-Transfer
               </h3>
-              
+
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <h4 className="font-semibold text-gray-700 mb-3">Step 1: Send Interac e-Transfer</h4>
@@ -450,7 +450,7 @@ const getTimeSlots = (selectedDate: string): string[] => {
                     <li>• <strong>Security Question:</strong> Use any question you prefer</li>
                   </ul>
                 </div>
-                
+
                 <div>
                   <h4 className="font-semibold text-gray-700 mb-3">Step 2: Upload Screenshot</h4>
                   <ul className="text-gray-600 space-y-2 text-sm">
@@ -464,7 +464,7 @@ const getTimeSlots = (selectedDate: string): string[] => {
 
               <div className="mt-4 p-4 bg-blue-50 rounded-lg">
                 <p className="text-sm text-gray-700">
-                  <strong>Important:</strong> Your appointment request cannot be processed without the deposit screenshot. 
+                  <strong>Important:</strong> Your appointment request cannot be processed without the deposit screenshot.
                   This $25 deposit is non-refundable and non-transferable, and will be deducted from your total service cost.
                 </p>
               </div>
@@ -494,10 +494,11 @@ const getTimeSlots = (selectedDate: string): string[] => {
                   <li>• This deposit goes toward your total balance</li>
                   <li>• No payments are accepted in advance beyond the deposit</li>
                   <li>• If I cancel your appointment, your deposit will be refunded within 3-5 business days</li>
+                  <li>• Braiding hair or extensions not included in the price</li>
                 </ul>
                 <div className="mt-4 p-3 bg-salon-pink/10 rounded-lg">
                   <p className="text-sm text-gray-700">
-                    <strong>Payment:</strong> Remaining balance due on appointment day. 
+                    <strong>Payment:</strong> Remaining balance due on appointment day.
                     <br />Accepted: Cash or Interac e-Transfer only.
                   </p>
                 </div>
@@ -545,7 +546,7 @@ const getTimeSlots = (selectedDate: string): string[] => {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-lg p-8 sticky top-8">
               <h3 className="text-2xl font-bold text-gray-800 mb-6">Get In Touch</h3>
-              
+
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
                   <div className="bg-salon-pink/20 p-3 rounded-full">
@@ -556,7 +557,7 @@ const getTimeSlots = (selectedDate: string): string[] => {
                     <p className="text-gray-600">+1 (437) 983-6451</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-4">
                   <div className="bg-salon-pink/20 p-3 rounded-full">
                     <Mail className="h-5 w-5 text-salon-pink" />
@@ -577,7 +578,7 @@ const getTimeSlots = (selectedDate: string): string[] => {
                     <p className="text-xs text-gray-500 mt-1">For $25 deposit payments</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-4">
                   <div className="bg-salon-pink/20 p-3 rounded-full">
                     <Clock className="h-5 w-5 text-salon-pink" />
@@ -593,7 +594,7 @@ const getTimeSlots = (selectedDate: string): string[] => {
 
               <div className="mt-8 p-4 bg-salon-pink/10 rounded-xl">
                 <p className="text-sm text-gray-600">
-                  <strong>Note:</strong> We'll confirm your appointment within 24 hours. 
+                  <strong>Note:</strong> We'll confirm your appointment within 24 hours.
                   For same-day appointments, please call us directly.
                 </p>
               </div>
@@ -785,7 +786,7 @@ const getTimeSlots = (selectedDate: string): string[] => {
                     </label>
                   </div>
                   <p className="text-xs text-gray-500 mt-2">
-                    Make sure the screenshot shows the $25 amount and recipient email (Adedejitiwalade8@gmail.com). 
+                    Make sure the screenshot shows the $25 amount and recipient email (Adedejitiwalade8@gmail.com).
                     Your image will be securely uploaded and a link will be sent in the email.
                   </p>
                 </div>
@@ -840,11 +841,11 @@ const getTimeSlots = (selectedDate: string): string[] => {
                 {(!agreedToPolicies || !depositScreenshot) && (
                   <div className="text-center">
                     <p className="text-sm text-gray-500">
-                      {!depositScreenshot && !agreedToPolicies 
+                      {!depositScreenshot && !agreedToPolicies
                         ? 'Please upload your deposit screenshot and agree to the policies to continue'
-                        : !depositScreenshot 
-                        ? 'Please upload your deposit screenshot to continue'
-                        : 'Please agree to the scheduling policies to continue'
+                        : !depositScreenshot
+                          ? 'Please upload your deposit screenshot to continue'
+                          : 'Please agree to the scheduling policies to continue'
                       }
                     </p>
                   </div>
